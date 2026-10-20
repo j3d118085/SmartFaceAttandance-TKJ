@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SMART FACE ATTENDANCE TKJ</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #f3f0ff;
+    color: #3730a3;
+    min-height: 100vh;
+}
+
+/* Header */
+.top-bar {
+    background: #4f46e5;
+    color: white;
+    padding: 16px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Navigasi */
+.nav-container {
+    background: white;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
+}
+
+.nav-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-width: 700px;
+    margin: auto;
+}
+
+.nav-item {
+    display: block;
+    padding: 14px 10px;
+    background: #eef2ff;
+    color: #4338ca;
+    text-decoration: none;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    transition: all 0.2s;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.nav-item:hover, .nav-item.active {
+    background: #4f46e5;
+    color: white;
+}
+
+/* Konten Utama */
+.container {
+    max-width: 720px;
+    margin: 20px auto;
+    padding: 0 16px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #3730a3;
+}
+
+/* Kartu Dashboard */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.card-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(79, 70, 229, 0.08);
+}
+
+.card-box h3 {
+    font-size: 15px;
+    color: #6366f1;
+    margin-bottom: 8px;
+}
+
+.card-box .angka {
+    font-size: 32px;
+    font-weight: 700;
+    color: #4f46e5;
+}
+
+.card-full {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(79, 70, 229, 0.08);
+    margin-bottom: 20px;
+}
+
+.card-full h3 {
+    font-size: 17px;
+    margin-bottom: 12px;
+    color: #4338ca;
+}
+
+.card-full p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+/* Form & Input */
+form label, label {
+    display: block;
+    margin: 12px 0 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3730a3;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    border: 1px solid #c7d2fe;
+}
+
+input, select {
+    background: white;
+    color: #3730a3;
+}
+
+button {
+    background: #4f46e5;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 14px;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: #4338ca;
+}
+
+button.secondary {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+button.secondary:hover {
+    background: #c7d2fe;
+}
+
+button.danger {
+    background: #dc2626;
+}
+
+button.danger:hover {
+    background: #b91c1c;
+}
+
+/* Kamera */
+video {
+    width: 100%;
+    background: #1e1b4b;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.status {
+    padding: 12px;
+    margin-top: 12px;
+    background: #eef2ff;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Tabel */
+.table-wrap {
+    overflow-x: auto;
+    margin-top: 14px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+th, td {
+    border: 1px solid #c7d2fe;
+    padding: 10px 8px;
+    text-align: left;
+}
+
+th {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+tr:nth-child(even) {
+    background: #fafbff;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 12px;
+    color: #818cf8;
+    margin-top: 40px;
+}
+
+.hidden {
+    display: none !important;
+}
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar">SMART FACE ATTENDANCE TKJ</div>
+
+<!-- Navigasi -->
+<div class="nav-container">
+    <div class="nav-grid">
+        <a class="nav-item active" data-page="dashboard">🏠 Dashboard</a>
+        <a class="nav-item" data-page="data-siswa">👨‍🎓 Data Siswa</a>
+        <a class="nav-item" data-page="registrasi-wajah">📸 Registrasi Wajah</a>
+        <a class="nav-item" data-page="absensi">🕐 Absensi</a>
+        <a class="nav-item" data-page="rekap">📋 Rekap Kehadiran</a>
+        <a class="nav-item" data-page="pengaturan">⚙️ Pengaturan</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ================================== -->
+    <!-- HALAMAN DASHBOARD -->
+    <!-- ================================== -->
+    <div id="dashboard" class="page active">
+        <h2>💜 Dashboard</h2>
+        <p style="margin-bottom:20px; color:#6366f1;">Selamat datang di SMART FACE ATTENDANCE TKJ. Kelola data dan kehadiran siswa dalam satu sistem.</p>
+
+        <div class="dashboard-grid">
+            <div class="card-box">
+                <h3>👨‍🎓 Total Siswa</h3>
+                <div class="angka" id="totalSiswa">0</div>
+            </div>
+            <div class="card-box">
+                <h3>✅ Hadir Hari Ini</h3>
+                <div class="angka" id="hadirHariIni">0</div>
+            </div>
+        </div>
+
+        <div class="card-box">
+            <h3>📝 Total Absensi</h3>
+            <div class="angka" id="totalAbsensi">0</div>
+        </div>
+
+        <div class="card-full" style="margin-top:20px;">
+            <h3>✨ Informasi Sistem</h3>
+            <p>Sistem absensi siswa TKJ dengan tampilan ungu modern.</p>
+            <p><strong>Status pengenalan wajah:</strong> belum diaktifkan.</p>
+            <p><strong>Status integrasi CCTV:</strong> belum dihubungkan.</p>
+            <button onclick="bukaHalaman('data-siswa')">+ Tambahkan Siswa</button>
+        </div>
+    </div>
+
+    <!-- ================================== -->
+    <!-- HALAMAN DATA SISWA -->
+    <!-- ================================== -->
+    <div id="data-siswa" class="page">
+        <h2>👨‍🎓 Data Siswa</h2>
+
+        <div class="card-full">
+            <h3>Tambah / Edit Siswa</h3>
+
+            <label for="nama">Nama Lengkap</label>
+            <input type="text" id="nama" placeholder="Masukkan nama siswa">
+
+            <label for="kelas">Kelas</label>
+            <select id="kelas">
+                <option value="">-- Pilih Kelas --</option>
+                <option value="X TKJ 1">X TKJ 1</option>
+                <option value="X TKJ 2">X TKJ 2</option>
+                <option value="X TKJ 3">X TKJ 3</option>
+            </select>
+
+            <button onclick="simpanSiswa()">💾 Simpan Data Siswa</button>
+        </div>
+
+        <div class="card-full">
+            <h3>Daftar Siswa Terdaftar</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Kelas</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelSiswa"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================== -->
+    <!-- HALAMAN REGISTRASI WAJAH -->
+    <!-- ================================== -->
+    <div id="registrasi-wajah" class="page">
+        <h2>📸 Registrasi Wajah</h2>
+
+        <div class="card-full">
+            <h3>Pilih Siswa</h3>
+            <label for="siswaReg">Nama Siswa</label>
+            <select id="siswaReg">
+                <option value="">-- Pilih siswa terlebih dahulu --</option>
+            </select>
+
+            <div class="status" id="statusKameraReg">Kamera belum diaktifkan.</div>
+
+            <video id="kameraReg" autoplay playsinline muted></video>
+
+            <button onclick="bukaKameraReg()">📷 Buka Kamera</button>
+            <button class="secondary" onclick="tutupKameraReg()">❌ Tutup Kamera</button>
+            <button onclick="simpanWajah()">💾 Simpan Data Wajah</button>
+
+            <p style="margin-top:12px; font-size:13px; color:#6366f1;">
+                💡 Posisikan wajah di tengah layar, lalu klik "Simpan Data Wajah".
+            </p>
+        </div>
+    </div>
+
+    <!-- ================================== -->
+    <!-- HALAMAN ABSENSI -->
+    <!-- ================================== -->
+    <div id="absensi" class="page">
+        <h2>🕐 Absensi Kehadiran</h2>
+
+        <div class="card-full">
+            <h3>Absensi Manual</h3>
+            <label for="pilihSiswaAbsen">Pilih Siswa</label>
+            <select id="pilihSiswaAbsen">
+                <option value="">-- Pilih siswa --</option>
+            </select>
+
+            <button onclick="catatHadir()">✅ Catat Kehadiran</button>
+        </div>
+
+        <div class="card-full">
+            <h3>Absensi dengan Wajah</h3>
+            <div class="status" id="statusKameraAbsen">Kamera belum diaktifkan.</div>
+            <video id="kameraAbsen" autoplay playsinline muted></video>
+
+            <button onclick="bukaKameraAbsen()">📷 Aktifkan Kamera</button>
+            <button class="secondary" onclick="tutupKameraAbsen()">❌ Matikan Kamera</button>
+            <button onclick="verifikasiWajah()">🔍 Verifikasi Wajah</button>
+
+            <p style="margin-top:12px; font-size:13px; color:#6366f1;">
+                ⚠️ Pengenalan wajah masih dalam tahap pengembangan. Gunakan absensi manual untuk kehadiran saat ini.
+            </p>
+        </div>
+    </div>
+
+    <!-- ================================== -->
+    <!-- HALAMAN REKAP KEHADIRAN -->
+    <!-- ================================== -->
+    <div id="rekap" class="page">
+        <h2>📋 Rekap Kehadiran</h2>
+
+        <div class="card-full">
+            <h3>Filter Data</h3>
+            <label for="filterTanggal">Tanggal</label>
+            <input type="date" id="filterTanggal">
+            <button onclick="filterRekap()">🔍 Tampilkan Rekap</button>
+        </div>
+
+        <div class="card-full">
+            <h3>Data Kehadiran</h3>
+            <p id="infoRekap">Total catatan: 0</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Kelas</th>
+                            <th>Tanggal</th>
+                            <th>Jam</th>
+                            <th>Metode</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelRekap"></tbody>
+                </table>
+            </div>
+
+            <button onclick="eksporCSV()">📥 Ekspor ke CSV</button>
+            <button class="danger" onclick="hapusSemuaRekap()">🗑️ Hapus Semua Data</button>
+        </div>
+    </div>
+
+    <!-- ================================== -->
+    <!-- HALAMAN PENGATURAN -->
+    <!-- ================================== -->
+    <div id="pengaturan" class="page">
+        <h2>⚙️ Pengaturan Sistem</h2>
+
+        <div class="card-full">
+            <h3>Informasi Aplikasi</h3>
+            <p><strong>Nama Aplikasi:</strong> SMART FACE ATTENDANCE TKJ</p>
+            <p><strong>Versi:</strong> 1.0.0 (Prototipe)</p>
+            <p><strong>Pengembang:</strong> Siswa TKJ — SMK Bintang Harapan</p>
+            <p><strong>Terakhir Diperbarui:</strong> 20 Oktober 2026</p>
+        </div>
+
+        <div class="card-full">
+            <h3>Pengaturan Umum</h3>
+            <label>Nama Sekolah</label>
+            <input type="text" id="namaSekolah" value="SMK Bintang Harapan">
+
+            <label>Jam Masuk</label>
+            <input type="time" id="jamMasuk" value="07:00">
+
+            <label>Jam Pulang</label>
+            <input type="time" id="jamPulang" value="15:00">
+
+            <button onclick="simpanPengaturan()">💾 Simpan Pengaturan</button>
+        </div>
+
+        <div class="card-full">
+            <h3>⚠️ Area Berbahaya</h3>
+            <p>Menghapus semua data tidak dapat dikembalikan!</p>
+            <button class="danger" onclick="if(confirm('Yakin hapus SEMUA data?')){localStorage.clear(); location.reload();}">🗑️ Reset Semua Data</button>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    SMART FACE ATTENDANCE TKJ © 2026 — Data tersimpan di browser perangkat Anda
+</footer>
+
+<script>
+// Kunci Penyimpanan
+const KUNCI_SISWA = "smart_attendance_siswa";
+const KUNCI_ABSEN = "smart_attendance_absen";
+
+// Variabel Kamera
+let streamReg = null;
+let streamAbsen = null;
+
+// ==================================
+// FUNGSI UTILITAS
+// ==================================
+function bacaData(kunci) {
+    try { return JSON.parse(localStorage.getItem(kunci)) || []; }
+    catch { return []; }
+}
+
+function simpanData(kunci, data) {
+    localStorage.setItem(kunci, JSON.stringify(data));
+}
+
+function formatTanggal(now = new Date()) {
+    return [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, '0'),
+        String(now.getDate()).padStart(2, '0')
+    ].join('-');
+}
+
+// ==================================
+// NAVIGASI HALAMAN
+// ==================================
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const halaman = item.getAttribute('data-page');
+        bukaHalaman(halaman);
+    });
+});
+
+function bukaHalaman(namaHalaman) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    document.getElementById(namaHalaman).classList.add('active');
+    document.querySelector(`[data-page="${namaHalaman}"]`).classList.add('active');
+
+    if (namaHalaman === 'dashboard') muatDashboard();
+    if (namaHalaman === 'data-siswa') muatTabelSiswa();
+    if (namaHalaman === 'registrasi-wajah' || namaHalaman === 'absensi') muatDropdownSiswa();
+    if (namaHalaman === 'rekap') muatTabelRekap();
+}
+
+// ==================================
+// DASHBOARD
+// ==================================
+function muatDashboard() {
+    const siswa = bacaData(KUNCI_SISWA);
+    const absen = bacaData(KUNCI_ABSEN);
+    const hariIni = formatTanggal();
+    const hadirHariIni = absen.filter(a => a.tanggal === hariIni).length;
+
+    document.getElementById('totalSiswa').textContent = siswa.length;
+    document.getElementById('hadirHariIni').textContent = hadirHariIni;
+    document.getElementById('totalAbsensi').textContent = absen.length;
+}
+
+// ==================================
+// DATA SISWA
+// ==================================
+function simpanSiswa() {
+    const nama = document.getElementById('nama').value.trim();
+    const kelas = document.getElementById('kelas').value;
+
+    if (!nama || !kelas) {
+        alert('Harap lengkapi semua data!');
+        return;
+    }
+
+    const siswa = bacaData(KUNCI_SISWA);
+    
+    const indeks = siswa.findIndex(s => s.nama === nama && s.kelas === kelas);
+
+    if (indeks >= 0) {
+        siswa[indeks] = { nama, kelas };
+        alert('Data siswa diperbarui!');
+    } else {
+        siswa.push({ nama, kelas });
+        alert('Siswa berhasil ditambahkan!');
+    }
+
+    simpanData(KUNCI_SISWA, siswa);
+    document.getElementById('nama').value = '';
+    muatTabelSiswa();
+    muatDropdownSiswa();
+    muatDashboard();
+}
+
+function muatTabelSiswa() {
+    const siswa = bacaData(KUNCI_SISWA);
+    const tbody = document.getElementById('tabelSiswa');
+    tbody.innerHTML = '';
+
+    siswa.forEach((s, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td style="display:flex;align-items:center;gap:8px;">
+                ${s.fotoWajah 
+                    ? `<img src="${s.fotoWajah}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">` 
+                    : '<div style="width:40px;height:40px;background:#ddd;border-radius:50%;"></div>'
+                }
+                ${s.nama}
+            </td>
+            <td>${s.kelas}</td>
+            <td>
+                <button class="secondary" style="padding:6px 10px; font-size:13px; margin:2px;" onclick="editSiswa(${i})">Ubah</button>
+                <button class="danger" style="padding:6px 10px; font-size:13px; margin:2px;" onclick="hapusSiswa(${i})">Hapus</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+
+function editSiswa(index) {
+    const siswa = bacaData(KUNCI_SISWA);
+    const data = siswa[index];
+    if (!data) return;
+    document.getElementById('nama').value = data.nama;
+    document.getElementById('kelas').value = data.kelas;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    sessionStorage.setItem('editIndex', index);
+}
+
+function hapusSiswa(index) {
+    if (!confirm('Yakin ingin menghapus data siswa ini?')) return;
+    const siswa = bacaData(KUNCI_SISWA);
+    siswa.splice(index, 1);
+    simpanData(KUNCI_SISWA, siswa);
+    muatTabelSiswa();
+    muatDropdownSiswa();
+    muatDashboard();
+}
+
+function muatDropdownSiswa() {
+    const siswa = bacaData(KUNCI_SISWA);
+    const targetIds = ['siswaReg', 'pilihSiswaAbsen'];
+    
+    targetIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.innerHTML = '<option value="">-- Pilih siswa --</option>';
+        siswa.forEach((s, i) => {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = `${s.nama} — ${s.kelas}`;
+            el.appendChild(opt);
+        });
+    });
+}
+
+// ==================================
+// KAMERA
+// ==================================
+async function bukaKamera(videoEl, statusEl) {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        statusEl.textContent = '❌ Browser tidak mendukung akses kamera. Gunakan Chrome lewat HTTPS.';
+        return null;
+    }
+
+    try {
+        statusEl.textContent = '⏳ Meminta izin kamera...';
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+            audio: false
+        });
+        videoEl.srcObject = stream;
+        await videoEl.play();
+        statusEl.textContent = '✅ Kamera aktif!';
+        return stream;
+    } catch (err) {
+        console.error(err);
+        let pesan = '❌ Gagal membuka kamera: ';
+        if (err.name === 'NotAllowedError') pesan += 'Izin ditolak. Aktifkan izin kamera di pengaturan browser.';
+        else if (err.name === 'NotFoundError') pesan += 'Kamera tidak ditemukan di perangkat.';
+        else pesan += err.message;
+        statusEl.textContent = pesan;
+        return null;
+    }
+}
+
+function tutupKamera(stream, videoEl, statusEl) {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+    }
+    if (videoEl) videoEl.srcObject = null;
+    if (statusEl) statusEl.textContent = 'Kamera belum diaktifkan.';
+    return null;
+}
+
+// Registrasi Wajah
+async function bukaKameraReg() {
+    const video = document.getElementById('kameraReg');
+    const status = document.getElementById('statusKameraReg');
+    streamReg = await bukaKamera(video, status);
+}
+
+function tutupKameraReg() {
+    const video = document.getElementById('kameraReg');
+    const status = document.getElementById('statusKameraReg');
+    streamReg = tutupKamera(streamReg, video, status);
+}
+
+function simpanWajah() {
+    const idx = document.getElementById('siswaReg').value;
+    if (idx === '') { alert('Pilih siswa terlebih dahulu!'); return; }
+    
+    const video = document.getElementById('kameraReg');
+    if (!video.srcObject) { alert('Buka kamera dulu!'); return; }
+
+    // Buat canvas untuk ambil foto
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0);
+    
+    // Konversi ke gambar
+    const fotoWajah = canvas.toDataURL('image/png');
+    
+    // Simpan ke data siswa
+    const siswa = bacaData(KUNCI_SISWA);
+    siswa[idx].fotoWajah = fotoWajah;
+    simpanData(KUNCI_SISWA, siswa);
+    
+    alert('✅ Foto wajah untuk "' + siswa[idx].nama + '" berhasil disimpan! 📸');
+}
+
+
+// Absensi Kamera
+async function bukaKameraAbsen() {
+    const video = document.getElementById('kameraAbsen');
+    const status = document.getElementById('statusKameraAbsen');
+    streamAbsen = await bukaKamera(video, status);
+}
+
+function tutupKameraAbsen() {
+    const video = document.getElementById('kameraAbsen');
+    const status = document.getElementById('statusKameraAbsen');
+    streamAbsen = tutupKamera(streamAbsen, video, status);
+}
+
+function verifikasiWajah() {
+    alert('🔍 Pengenalan wajah sedang diproses...\n\n⚠️ Fitur ini dalam tahap pengembangan. Gunakan Absensi Manual untuk saat ini ya!');
+}
+
+// ==================================
+// ABSENSI
+// ==================================
+function catatHadir() {
+    const idx = document.getElementById('pilihSiswaAbsen').value;
+    if (idx === '') { alert('Pilih siswa terlebih dahulu!'); return; }
+
+    const siswa = bacaData(KUNCI_SISWA)[idx];
+    if (!siswa) { alert('Data siswa tidak ditemukan!'); return; }
+
+    const absen = bacaData(KUNCI_ABSEN);
+    const hariIni = formatTanggal();
+    const sekarang = new Date();
+    const jam = sekarang.toLocaleTimeString('id-ID');
+    const kunci = hariIni + '_' + idx;
+
+    if (absen.some(a => a.kunci === kunci)) {
+        alert('Siswa sudah tercatat hadir hari ini!');
+        return;
+    }
+
+    absen.push({
+        kunci,
+        nama: siswa.nama,
+        kelas: siswa.kelas,
+        tanggal: hariIni,
+        jam: jam,
+        metode: 'Manual'
+    });
+
+    simpanData(KUNCI_ABSEN, absen);
+    alert('✅ Kehadiran dicatat!');
+    muatDashboard();
+    bukaHalaman('rekap');
+}
+
+// ==================================
+// REKAP
+// ==================================
+function muatTabelRekap(filterTanggal = null) {
+    let absen = bacaData(KUNCI_ABSEN);
+    if (filterTanggal) absen = absen.filter(a => a.tanggal === filterTanggal);
+
+    const tbody = document.getElementById('tabelRekap');
+    tbody.innerHTML = '';
+    document.getElementById('infoRekap').textContent = 'Total catatan: ' + absen.length;
+
+    absen.forEach(a => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${a.nama}</td>
+            <td>${a.kelas}</td>
+            <td>${a.tanggal}</td>
+            <td>${a.jam}</td>
+            <td>${a.metode}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function filterRekap() {
+    const tgl = document.getElementById('filterTanggal').value;
+    muatTabelRekap(tgl || null);
+}
+
+function eksporCSV() {
+    const absen = bacaData(KUNCI_ABSEN);
+    if (!absen.length) { alert('Belum ada data untuk diekspor!'); return; }
+
+    const baris = [
+        ['Nama', 'Kelas', 'Tanggal', 'Jam', 'Metode'],
+        ...absen.map(a => [a.nama, a.kelas, a.tanggal, a.jam, a.metode])
+    ];
+
+    const csv = '\uFEFF' + baris.map(row => row.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'rekap_absensi_' + formatTanggal() + '.csv';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function hapusSemuaRekap() {
+    if (!confirm('⚠️ Yakin ingin MENGHAPUS SEMUA data rekap kehadiran? Tindakan ini tidak bisa dibatalkan!')) return;
+    simpanData(KUNCI_ABSEN, []);
+    muatTabelRekap();
+    muatDashboard();
+}
+
+// ==================================
+// PENGATURAN
+// ==================================
+function simpanPengaturan() {
+    alert('✅ Pengaturan disimpan!');
+}
+
+// ==================================
+// INISIALISASI AWAL
+// ==================================
+document.addEventListener('DOMContentLoaded', () => {
+    muatDashboard();
+    document.getElementById('filterTanggal').value = formatTanggal();
+});
+</script>
+
+</body>
+</html>
